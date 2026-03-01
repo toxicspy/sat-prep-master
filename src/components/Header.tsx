@@ -5,10 +5,10 @@ import { Menu, X, BookOpen } from "lucide-react";
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/practice/math", label: "Math" },
-  { to: "/practice/reading", label: "Reading & Writing" },
+  { to: "/practice/reading", label: "Reading" },
+  { to: "/mock-test", label: "Mock Test" },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/blog", label: "Blog" },
-  { to: "/about", label: "About" },
 ];
 
 const Header = () => {
@@ -20,10 +20,9 @@ const Header = () => {
       <div className="container flex items-center justify-between h-16">
         <Link to="/" className="flex items-center gap-2 font-serif text-xl font-bold text-primary">
           <BookOpen className="w-6 h-6" />
-          SAT Ace Prep
+          SAT Ace Pro
         </Link>
 
-        {/* Desktop */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
             <Link
@@ -40,7 +39,6 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Mobile toggle */}
         <button
           className="md:hidden p-2 rounded-md hover:bg-muted"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -50,7 +48,6 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Mobile nav */}
       {mobileOpen && (
         <nav className="md:hidden border-t bg-background p-4 space-y-1">
           {navLinks.map((link) => (
