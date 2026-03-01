@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Question } from "@/data/questions";
-import { CheckCircle2, XCircle, ChevronRight } from "lucide-react";
+import { CheckCircle2, XCircle, ChevronRight, Bookmark } from "lucide-react";
+import { isBookmarked, toggleBookmark } from "@/lib/gamification";
 
 interface Props {
   question: Question;
   index: number;
   total: number;
-  onAnswer: (correct: boolean) => void;
+  onAnswer: (correct: boolean, selectedIndex: number) => void;
   onNext: () => void;
   isLast: boolean;
 }
@@ -14,12 +15,18 @@ interface Props {
 const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Props) => {
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
+  const [bookmarked, setBookmarked] = useState(() => isBookmarked(question.id));
 
   const handleSelect = (optIndex: number) => {
     if (answered) return;
     setSelected(optIndex);
     setAnswered(true);
-    onAnswer(optIndex === question.correct);
+    onAnswer(optIndex === question.correct, optIndex);
+  };
+
+  const handleBookmark = () => {
+    const result = toggleBookmark(question.id);
+    setBookmarked(result);
   };
 
   const optionClasses = (i: number) => {
@@ -42,12 +49,24 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Prop
         <span className="text-xs font-medium text-muted-foreground">
           Question {index + 1} of {total}
         </span>
-        <div className="h-1.5 flex-1 mx-4 bg-muted rounded-full overflow-hidden">
-          <div
-            className="h-full hero-gradient rounded-full transition-all duration-500"
-            style={{ width: `${((index + 1) / total) * 100}%` }}
-          />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleBookmark}
+            className={`p-1.5 rounded-md transition-colors ${
+              bookmarked ? "text-primary bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+            }`}
+            aria-label="Bookmark question"
+          >
+            <Bookmark className="w-4 h-4" fill={bookmarked ? "currentColor" : "none"} />
+          </button>
         </div>
+      </div>
+
+      <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden mb-4">
+        <div
+          className="h-full hero-gradient rounded-full transition-all duration-500"
+          style={{ width: `${((index + 1) / total) * 100}%` }}
+        />
       </div>
 
       <h3 className="text-lg font-semibold mb-5 text-foreground font-sans">{question.question}</h3>

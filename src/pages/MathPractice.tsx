@@ -6,6 +6,7 @@ import DifficultyFilter from "@/components/DifficultyFilter";
 import Timer from "@/components/Timer";
 import { mathQuestions, Difficulty, Question } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
+import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
 import { Calculator, Clock } from "lucide-react";
 
 const TIMER_SECONDS = 35 * 60;
@@ -17,6 +18,7 @@ const MathPractice = () => {
   const [score, setScore] = useState(0);
   const [started, setStarted] = useState(false);
   const topicScores = useRef<Record<string, { correct: number; total: number }>>({});
+  const answersRef = useRef<Record<number, number>>({});
   const elapsedRef = useRef(0);
   const navigate = useNavigate();
 
@@ -26,12 +28,14 @@ const MathPractice = () => {
     setCurrent(0);
     setScore(0);
     topicScores.current = {};
+    answersRef.current = {};
     setStarted(true);
   };
 
-  const recordAnswer = (q: Question, correct: boolean) => {
+  const recordAnswer = (q: Question, correct: boolean, selectedIndex: number) => {
     if (!topicScores.current[q.topic]) topicScores.current[q.topic] = { correct: 0, total: 0 };
     topicScores.current[q.topic].total += 1;
+    answersRef.current[q.id] = selectedIndex;
     if (correct) {
       topicScores.current[q.topic].correct += 1;
       setScore((s) => s + 1);
@@ -40,6 +44,10 @@ const MathPractice = () => {
 
   const finish = (finalScore?: number) => {
     const s = finalScore ?? score;
+    const isPerfect = s === filtered.length;
+    addXP(calculateTestXP(s, filtered.length, isPerfect));
+    recordPracticeDay();
+
     const attempt: TestAttempt = {
       id: Date.now().toString(),
       date: new Date().toISOString(),
@@ -53,7 +61,9 @@ const MathPractice = () => {
     };
     saveAttempt(attempt);
     const topicParam = encodeURIComponent(JSON.stringify(topicScores.current));
-    navigate(`/score?correct=${s}&total=${filtered.length}&section=Math&topics=${topicParam}`);
+    const answersParam = encodeURIComponent(JSON.stringify(answersRef.current));
+    const xp = calculateTestXP(s, filtered.length, isPerfect);
+    navigate(`/score?correct=${s}&total=${filtered.length}&section=Math&topics=${topicParam}&answers=${answersParam}&xp=${xp}`);
   };
 
   const handleNext = () => {
@@ -108,7 +118,7 @@ const MathPractice = () => {
             question={filtered[current]}
             index={current}
             total={filtered.length}
-            onAnswer={(correct) => recordAnswer(filtered[current], correct)}
+            onAnswer={(correct, selectedIndex) => recordAnswer(filtered[current], correct, selectedIndex)}
             onNext={handleNext}
             isLast={current >= filtered.length - 1}
           />

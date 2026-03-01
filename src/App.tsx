@@ -9,6 +9,8 @@ import ReadingPractice from "./pages/ReadingPractice";
 import MockTest from "./pages/MockTest";
 import Score from "./pages/Score";
 import Dashboard from "./pages/Dashboard";
+import ReviewTest from "./pages/ReviewTest";
+import SavedQuestions from "./pages/SavedQuestions";
 import { BlogList, BlogPost } from "./pages/Blog";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
@@ -30,6 +32,8 @@ const App = () => (
           <Route path="/mock-test" element={<MockTest />} />
           <Route path="/score" element={<Score />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/review" element={<ReviewTest />} />
+          <Route path="/saved" element={<SavedQuestions />} />
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/about" element={<About />} />
