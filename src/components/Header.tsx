@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, BookOpen } from "lucide-react";
+import { Menu, X, BookOpen, Bookmark } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { to: "/", label: "Home" },
@@ -39,13 +40,19 @@ const Header = () => {
           ))}
         </nav>
 
-        <button
-          className="md:hidden p-2 rounded-md hover:bg-muted"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-1">
+          <Link to="/saved" className="p-2 rounded-md hover:bg-muted transition-colors" aria-label="Saved Questions">
+            <Bookmark className="w-4 h-4" />
+          </Link>
+          <ThemeToggle />
+          <button
+            className="md:hidden p-2 rounded-md hover:bg-muted"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {mobileOpen && (
@@ -64,6 +71,13 @@ const Header = () => {
               {link.label}
             </Link>
           ))}
+          <Link
+            to="/saved"
+            onClick={() => setMobileOpen(false)}
+            className="block px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted"
+          >
+            Saved Questions
+          </Link>
         </nav>
       )}
     </header>

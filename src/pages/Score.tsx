@@ -1,13 +1,15 @@
 import { useSearchParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import TopicBreakdown from "@/components/TopicBreakdown";
-import { Trophy, RotateCcw, Home, BarChart3 } from "lucide-react";
+import StudyRecommendations from "@/components/StudyRecommendations";
+import { Trophy, RotateCcw, Home, BarChart3, Eye, Star } from "lucide-react";
 
 const Score = () => {
   const [params] = useSearchParams();
   const correct = Number(params.get("correct") || 0);
   const total = Number(params.get("total") || 1);
   const section = params.get("section") || "Practice";
+  const xpEarned = Number(params.get("xp") || 0);
   const pct = Math.round((correct / total) * 100);
 
   let topicScores: Record<string, { correct: number; total: number }> = {};
@@ -15,6 +17,8 @@ const Score = () => {
     const raw = params.get("topics");
     if (raw) topicScores = JSON.parse(decodeURIComponent(raw));
   } catch {}
+
+  const hasAnswers = !!params.get("answers");
 
   const getMessage = () => {
     if (pct >= 90) return "Outstanding! You're well-prepared.";
@@ -25,6 +29,10 @@ const Score = () => {
 
   const retryPath = section.includes("Reading") ? "/practice/reading" : section.includes("Mock") ? "/mock-test" : "/practice/math";
 
+  const reviewUrl = hasAnswers
+    ? `/review?answers=${params.get("answers")}&topics=${params.get("topics") || ""}`
+    : null;
+
   return (
     <Layout>
       <div className="container max-w-2xl py-12">
@@ -34,16 +42,29 @@ const Score = () => {
             <h1 className="text-3xl font-bold mb-2">{section} Score</h1>
             <p className="text-muted-foreground mb-6">{getMessage()}</p>
             <div className="text-6xl font-bold text-primary mb-1">{pct}%</div>
-            <p className="text-muted-foreground mb-6">{correct} of {total} correct</p>
+            <p className="text-muted-foreground mb-2">{correct} of {total} correct</p>
+            {xpEarned > 0 && (
+              <p className="text-sm font-medium text-primary flex items-center justify-center gap-1 mb-4">
+                <Star className="w-4 h-4" /> +{xpEarned} XP earned
+              </p>
+            )}
             <div className="w-full h-3 bg-muted rounded-full overflow-hidden mb-6">
               <div className="h-full hero-gradient rounded-full" style={{ width: `${pct}%` }} />
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {reviewUrl && (
+              <Link
+                to={reviewUrl}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 hero-gradient text-primary-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity"
+              >
+                <Eye className="w-4 h-4" /> Review Answers
+              </Link>
+            )}
             <Link
               to={retryPath}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 hero-gradient text-primary-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 border rounded-lg font-medium text-sm hover:bg-muted transition-colors"
             >
               <RotateCcw className="w-4 h-4" /> Try Again
             </Link>
@@ -63,10 +84,13 @@ const Score = () => {
         </div>
 
         {Object.keys(topicScores).length > 0 && (
-          <div className="p-6 rounded-xl border bg-card card-shadow">
-            <h2 className="text-lg font-semibold mb-4 font-sans">Score by Topic</h2>
-            <TopicBreakdown scores={topicScores} />
-          </div>
+          <>
+            <div className="p-6 rounded-xl border bg-card card-shadow mb-6">
+              <h2 className="text-lg font-semibold mb-4 font-sans">Score by Topic</h2>
+              <TopicBreakdown scores={topicScores} />
+            </div>
+            <StudyRecommendations topicScores={topicScores} />
+          </>
         )}
       </div>
     </Layout>

@@ -1,9 +1,11 @@
 import Layout from "@/components/Layout";
 import PerformanceChart from "@/components/PerformanceChart";
-import { getStats, getTopicStats, getAttempts } from "@/lib/storage";
+import StreakBadge from "@/components/StreakBadge";
+import XPDisplay from "@/components/XPDisplay";
+import { getStats, getTopicStats } from "@/lib/storage";
 import { topicLabels, Topic } from "@/data/questions";
 import { Link } from "react-router-dom";
-import { Calculator, FileText, BarChart3, Target, TrendingUp, Award, Percent, Hash } from "lucide-react";
+import { Calculator, FileText, Hash, TrendingUp, Award, Percent } from "lucide-react";
 
 const Dashboard = () => {
   const { totalTests, avgScore, highestScore, accuracyRate, recentAttempts } = getStats();
@@ -18,6 +20,12 @@ const Dashboard = () => {
       <div className="container py-10">
         <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
         <p className="text-muted-foreground mb-8">Track your progress and performance over time.</p>
+
+        {/* Streak & XP */}
+        <div className="grid sm:grid-cols-2 gap-4 mb-10">
+          <StreakBadge />
+          <XPDisplay />
+        </div>
 
         {/* Stats */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
