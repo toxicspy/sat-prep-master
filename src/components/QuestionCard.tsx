@@ -1,0 +1,93 @@
+import { useState } from "react";
+import { Question } from "@/data/questions";
+import { CheckCircle2, XCircle, ChevronRight } from "lucide-react";
+
+interface Props {
+  question: Question;
+  index: number;
+  total: number;
+  onAnswer: (correct: boolean) => void;
+  onNext: () => void;
+  isLast: boolean;
+}
+
+const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Props) => {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [answered, setAnswered] = useState(false);
+
+  const handleSelect = (optIndex: number) => {
+    if (answered) return;
+    setSelected(optIndex);
+    setAnswered(true);
+    onAnswer(optIndex === question.correct);
+  };
+
+  const optionClasses = (i: number) => {
+    const base = "w-full text-left px-4 py-3 rounded-lg border text-sm font-medium transition-all ";
+    if (!answered) return base + "border-border hover:border-primary hover:bg-accent cursor-pointer";
+    if (i === question.correct) return base + "border-success bg-success/10 text-success";
+    if (i === selected) return base + "border-destructive bg-destructive/10 text-destructive";
+    return base + "border-border opacity-50";
+  };
+
+  return (
+    <div className="animate-fade-in">
+      {question.passage && (
+        <div className="mb-6 p-4 bg-muted rounded-lg border">
+          <p className="text-sm leading-relaxed text-foreground">{question.passage}</p>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-xs font-medium text-muted-foreground">
+          Question {index + 1} of {total}
+        </span>
+        <div className="h-1.5 flex-1 mx-4 bg-muted rounded-full overflow-hidden">
+          <div
+            className="h-full hero-gradient rounded-full transition-all duration-500"
+            style={{ width: `${((index + 1) / total) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <h3 className="text-lg font-semibold mb-5 text-foreground font-sans">{question.question}</h3>
+
+      <div className="space-y-3 mb-5">
+        {question.options.map((opt, i) => (
+          <button key={i} onClick={() => handleSelect(i)} className={optionClasses(i)}>
+            <span className="inline-flex items-center gap-3">
+              <span className="w-6 h-6 rounded-full border flex items-center justify-center text-xs shrink-0">
+                {String.fromCharCode(65 + i)}
+              </span>
+              {opt}
+              {answered && i === question.correct && <CheckCircle2 className="w-4 h-4 ml-auto text-success" />}
+              {answered && i === selected && i !== question.correct && <XCircle className="w-4 h-4 ml-auto text-destructive" />}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {answered && (
+        <div className="animate-fade-in">
+          <div className="p-4 rounded-lg bg-accent border border-primary/20 mb-4">
+            <p className="text-sm font-medium text-accent-foreground mb-1">Explanation</p>
+            <p className="text-sm text-muted-foreground">{question.explanation}</p>
+          </div>
+          <button
+            onClick={() => {
+              setSelected(null);
+              setAnswered(false);
+              onNext();
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg hero-gradient text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
+          >
+            {isLast ? "View Score" : "Next Question"}
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default QuestionCard;
