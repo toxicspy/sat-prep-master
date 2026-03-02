@@ -8,7 +8,9 @@ const navLinks = [
   { to: "/practice/math", label: "Math" },
   { to: "/practice/reading", label: "Reading" },
   { to: "/mock-test", label: "Mock Test" },
+  { to: "/sat-simulation", label: "Full SAT" },
   { to: "/dashboard", label: "Dashboard" },
+  { to: "/college-insights", label: "College Insights" },
   { to: "/blog", label: "Blog" },
 ];
 

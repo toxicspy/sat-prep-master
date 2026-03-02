@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Question } from "@/data/questions";
-import { CheckCircle2, XCircle, ChevronRight, Bookmark } from "lucide-react";
+import { CheckCircle2, XCircle, ChevronRight, Bookmark, Lightbulb } from "lucide-react";
 import { isBookmarked, toggleBookmark } from "@/lib/gamification";
 
 interface Props {
@@ -11,6 +11,31 @@ interface Props {
   onNext: () => void;
   isLast: boolean;
 }
+
+const SimpleExplanation = ({ explanation }: { explanation: string }) => {
+  const [show, setShow] = useState(false);
+  // Generate a simplified version by breaking into steps
+  const steps = explanation.split(/[.;]/).filter(s => s.trim().length > 3).map(s => s.trim() + ".");
+  return (
+    <div className="mt-3">
+      <button onClick={() => setShow(!show)} className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline">
+        <Lightbulb className="w-3.5 h-3.5" />
+        {show ? "Hide Simple Explanation" : "Explain in Simple Terms"}
+      </button>
+      {show && (
+        <div className="mt-2 p-3 rounded-md bg-background border text-xs space-y-1.5">
+          <p className="font-medium text-foreground mb-1">Step-by-step:</p>
+          {steps.map((step, i) => (
+            <div key={i} className="flex gap-2">
+              <span className="shrink-0 w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">{i + 1}</span>
+              <span className="text-muted-foreground">{step}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Props) => {
   const [selected, setSelected] = useState<number | null>(null);
@@ -91,6 +116,7 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Prop
           <div className="p-4 rounded-lg bg-accent border border-primary/20 mb-4">
             <p className="text-sm font-medium text-accent-foreground mb-1">Explanation</p>
             <p className="text-sm text-muted-foreground">{question.explanation}</p>
+            <SimpleExplanation explanation={question.explanation} />
           </div>
           <button
             onClick={() => {

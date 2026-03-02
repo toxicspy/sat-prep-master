@@ -15,6 +15,8 @@ import { BlogList, BlogPost } from "./pages/Blog";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import FullSATSimulation from "./pages/FullSATSimulation";
+import CollegeInsights from "./pages/CollegeInsights";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +38,8 @@ const App = () => (
           <Route path="/saved" element={<SavedQuestions />} />
           <Route path="/blog" element={<BlogList />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/sat-simulation" element={<FullSATSimulation />} />
+          <Route path="/college-insights" element={<CollegeInsights />} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
