@@ -43,9 +43,28 @@ export function getStreakData(): StreakData {
   } catch { return { currentStreak: 0, longestStreak: 0, lastPracticeDate: null }; }
 }
 
+const PRACTICE_DAYS_KEY = "sat-ace-pro-practice-days";
+
+export function getPracticeDays(): string[] {
+  try {
+    const raw = localStorage.getItem(PRACTICE_DAYS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function savePracticeDay(date: string) {
+  const days = getPracticeDays();
+  if (!days.includes(date)) {
+    days.push(date);
+    // Keep last 365 days
+    localStorage.setItem(PRACTICE_DAYS_KEY, JSON.stringify(days.slice(-365)));
+  }
+}
+
 export function recordPracticeDay(): StreakData {
   const data = getStreakData();
   const today = new Date().toISOString().split("T")[0];
+  savePracticeDay(today);
   
   if (data.lastPracticeDate === today) return data;
   

@@ -11,6 +11,7 @@ import Score from "./pages/Score";
 import Dashboard from "./pages/Dashboard";
 import ReviewTest from "./pages/ReviewTest";
 import SavedQuestions from "./pages/SavedQuestions";
+import RetakeWrong from "./pages/RetakeWrong";
 import { BlogList, BlogPost } from "./pages/Blog";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/practice/math" element={<MathPractice />} />
           <Route path="/practice/reading" element={<ReadingPractice />} />
+          <Route path="/practice/retake" element={<RetakeWrong />} />
           <Route path="/mock-test" element={<MockTest />} />
           <Route path="/score" element={<Score />} />
           <Route path="/dashboard" element={<Dashboard />} />

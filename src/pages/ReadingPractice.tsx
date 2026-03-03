@@ -19,6 +19,7 @@ const ReadingPractice = () => {
   const [started, setStarted] = useState(false);
   const topicScores = useRef<Record<string, { correct: number; total: number }>>({});
   const answersRef = useRef<Record<number, number>>({});
+  const questionTimesRef = useRef<Record<number, number>>({});
   const elapsedRef = useRef(0);
   const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ const ReadingPractice = () => {
     setScore(0);
     topicScores.current = {};
     answersRef.current = {};
+    questionTimesRef.current = {};
     setStarted(true);
   };
 
@@ -58,12 +60,14 @@ const ReadingPractice = () => {
       difficulty,
       topicScores: { ...topicScores.current },
       timeUsed: elapsedRef.current,
+      questionTimes: { ...questionTimesRef.current },
     };
     saveAttempt(attempt);
     const topicParam = encodeURIComponent(JSON.stringify(topicScores.current));
     const answersParam = encodeURIComponent(JSON.stringify(answersRef.current));
+    const timesParam = encodeURIComponent(JSON.stringify(questionTimesRef.current));
     const xp = calculateTestXP(s, filtered.length, isPerfect);
-    navigate(`/score?correct=${s}&total=${filtered.length}&section=Reading%20%26%20Writing&topics=${topicParam}&answers=${answersParam}&xp=${xp}`);
+    navigate(`/score?correct=${s}&total=${filtered.length}&section=Reading%20%26%20Writing&topics=${topicParam}&answers=${answersParam}&times=${timesParam}&xp=${xp}`);
   };
 
   const handleNext = () => {
@@ -103,7 +107,7 @@ const ReadingPractice = () => {
   return (
     <Layout>
       <div className="container max-w-3xl py-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6 sticky top-16 z-40 bg-background/95 backdrop-blur py-2 -mx-4 px-4">
           <div className="flex items-center gap-3">
             <FileText className="w-6 h-6 text-primary" />
             <h1 className="text-xl font-bold font-sans">Reading & Writing</h1>
@@ -121,6 +125,7 @@ const ReadingPractice = () => {
             onAnswer={(correct, selectedIndex) => recordAnswer(filtered[current], correct, selectedIndex)}
             onNext={handleNext}
             isLast={current >= filtered.length - 1}
+            onTimeSpent={(id, s) => { questionTimesRef.current[id] = s; }}
           />
         </div>
       </div>

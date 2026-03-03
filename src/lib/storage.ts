@@ -10,6 +10,7 @@ export interface TestAttempt {
   difficulty: string;
   topicScores: Record<string, { correct: number; total: number }>;
   timeUsed?: number; // seconds
+  questionTimes?: Record<number, number>; // questionId → seconds spent
 }
 
 const STORAGE_KEY = "sat-ace-pro-attempts";

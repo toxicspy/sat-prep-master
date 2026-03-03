@@ -1,11 +1,15 @@
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import TopicBreakdown from "@/components/TopicBreakdown";
 import StudyRecommendations from "@/components/StudyRecommendations";
-import { Trophy, RotateCcw, Home, BarChart3, Eye, Star } from "lucide-react";
+import MistakePatterns from "@/components/MistakePatterns";
+import TimeAnalysis from "@/components/TimeAnalysis";
+import { Trophy, RotateCcw, Home, BarChart3, Eye, Star, RefreshCw } from "lucide-react";
+import { allQuestions } from "@/data/questions";
 
 const Score = () => {
   const [params] = useSearchParams();
+  const navigate = useNavigate();
   const correct = Number(params.get("correct") || 0);
   const total = Number(params.get("total") || 1);
   const section = params.get("section") || "Practice";
@@ -13,12 +17,31 @@ const Score = () => {
   const pct = Math.round((correct / total) * 100);
 
   let topicScores: Record<string, { correct: number; total: number }> = {};
+  let answers: Record<number, number> = {};
+  let questionTimes: Record<number, number> = {};
   try {
     const raw = params.get("topics");
     if (raw) topicScores = JSON.parse(decodeURIComponent(raw));
+    const rawA = params.get("answers");
+    if (rawA) answers = JSON.parse(decodeURIComponent(rawA));
+    const rawT = params.get("times");
+    if (rawT) questionTimes = JSON.parse(decodeURIComponent(rawT));
   } catch {}
 
   const hasAnswers = !!params.get("answers");
+
+  // Get wrong question IDs for retake mode
+  const wrongIds = Object.entries(answers)
+    .filter(([id, sel]) => {
+      const q = allQuestions.find((q) => q.id === Number(id));
+      return q && sel !== q.correct;
+    })
+    .map(([id]) => Number(id));
+
+  const handleRetakeWrong = () => {
+    const encoded = encodeURIComponent(JSON.stringify(wrongIds));
+    navigate(`/practice/retake?ids=${encoded}`);
+  };
 
   const getMessage = () => {
     if (pct >= 90) return "Outstanding! You're well-prepared.";
@@ -30,7 +53,7 @@ const Score = () => {
   const retryPath = section.includes("Reading") ? "/practice/reading" : section.includes("Mock") ? "/mock-test" : "/practice/math";
 
   const reviewUrl = hasAnswers
-    ? `/review?answers=${params.get("answers")}&topics=${params.get("topics") || ""}`
+    ? `/review?answers=${params.get("answers")}&topics=${params.get("topics") || ""}&times=${params.get("times") || ""}`
     : null;
 
   return (
@@ -53,7 +76,7 @@ const Score = () => {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap">
             {reviewUrl && (
               <Link
                 to={reviewUrl}
@@ -61,6 +84,14 @@ const Score = () => {
               >
                 <Eye className="w-4 h-4" /> Review Answers
               </Link>
+            )}
+            {wrongIds.length > 0 && (
+              <button
+                onClick={handleRetakeWrong}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-destructive/30 text-destructive rounded-lg font-medium text-sm hover:bg-destructive/5 transition-colors"
+              >
+                <RefreshCw className="w-4 h-4" /> Retake Wrong ({wrongIds.length})
+              </button>
             )}
             <Link
               to={retryPath}
@@ -82,6 +113,20 @@ const Score = () => {
             </Link>
           </div>
         </div>
+
+        {/* Time Analysis */}
+        {Object.keys(questionTimes).length > 0 && (
+          <div className="mb-6">
+            <TimeAnalysis questionTimes={questionTimes} answers={answers} />
+          </div>
+        )}
+
+        {/* Mistake Patterns */}
+        {Object.keys(answers).length > 0 && (
+          <div className="mb-6">
+            <MistakePatterns answers={answers} questionTimes={Object.keys(questionTimes).length > 0 ? questionTimes : undefined} />
+          </div>
+        )}
 
         {Object.keys(topicScores).length > 0 && (
           <>

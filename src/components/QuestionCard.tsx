@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Question } from "@/data/questions";
-import { CheckCircle2, XCircle, ChevronRight, Bookmark, Lightbulb } from "lucide-react";
+import { CheckCircle2, XCircle, ChevronRight, Bookmark, Lightbulb, Target } from "lucide-react";
 import { isBookmarked, toggleBookmark } from "@/lib/gamification";
+import { getStrategyTip } from "@/lib/strategyTips";
 
 interface Props {
   question: Question;
@@ -10,11 +11,12 @@ interface Props {
   onAnswer: (correct: boolean, selectedIndex: number) => void;
   onNext: () => void;
   isLast: boolean;
+  hideCorrectBeforeSubmit?: boolean;
+  onTimeSpent?: (questionId: number, seconds: number) => void;
 }
 
 const SimpleExplanation = ({ explanation }: { explanation: string }) => {
   const [show, setShow] = useState(false);
-  // Generate a simplified version by breaking into steps
   const steps = explanation.split(/[.;]/).filter(s => s.trim().length > 3).map(s => s.trim() + ".");
   return (
     <div className="mt-3">
@@ -37,16 +39,21 @@ const SimpleExplanation = ({ explanation }: { explanation: string }) => {
   );
 };
 
-const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Props) => {
+const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast, hideCorrectBeforeSubmit = false, onTimeSpent }: Props) => {
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
   const [bookmarked, setBookmarked] = useState(() => isBookmarked(question.id));
+  const [startTime] = useState(() => Date.now());
+
+  const tip = useMemo(() => getStrategyTip(question.topic), [question.id]);
 
   const handleSelect = (optIndex: number) => {
     if (answered) return;
+    const timeSpent = Math.round((Date.now() - startTime) / 1000);
     setSelected(optIndex);
     setAnswered(true);
     onAnswer(optIndex === question.correct, optIndex);
+    onTimeSpent?.(question.id, timeSpent);
   };
 
   const handleBookmark = () => {
@@ -57,6 +64,10 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Prop
   const optionClasses = (i: number) => {
     const base = "w-full text-left px-4 py-3 rounded-lg border text-sm font-medium transition-all ";
     if (!answered) return base + "border-border hover:border-primary hover:bg-accent cursor-pointer";
+    if (hideCorrectBeforeSubmit) {
+      if (i === selected) return base + "border-primary bg-primary/10 text-primary";
+      return base + "border-border opacity-50";
+    }
     if (i === question.correct) return base + "border-success bg-success/10 text-success";
     if (i === selected) return base + "border-destructive bg-destructive/10 text-destructive";
     return base + "border-border opacity-50";
@@ -94,6 +105,14 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Prop
         />
       </div>
 
+      {/* Strategy Tip */}
+      {!answered && (
+        <div className="mb-4 p-2.5 rounded-lg bg-accent/50 border border-primary/10 flex items-start gap-2">
+          <Target className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+          <p className="text-xs text-muted-foreground">{tip}</p>
+        </div>
+      )}
+
       <h3 className="text-lg font-semibold mb-5 text-foreground font-sans">{question.question}</h3>
 
       <div className="space-y-3 mb-5">
@@ -104,14 +123,14 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Prop
                 {String.fromCharCode(65 + i)}
               </span>
               {opt}
-              {answered && i === question.correct && <CheckCircle2 className="w-4 h-4 ml-auto text-success" />}
-              {answered && i === selected && i !== question.correct && <XCircle className="w-4 h-4 ml-auto text-destructive" />}
+              {answered && !hideCorrectBeforeSubmit && i === question.correct && <CheckCircle2 className="w-4 h-4 ml-auto text-success" />}
+              {answered && !hideCorrectBeforeSubmit && i === selected && i !== question.correct && <XCircle className="w-4 h-4 ml-auto text-destructive" />}
             </span>
           </button>
         ))}
       </div>
 
-      {answered && (
+      {answered && !hideCorrectBeforeSubmit && (
         <div className="animate-fade-in">
           <div className="p-4 rounded-lg bg-accent border border-primary/20 mb-4">
             <p className="text-sm font-medium text-accent-foreground mb-1">Explanation</p>
@@ -127,6 +146,22 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast }: Prop
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg hero-gradient text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
           >
             {isLast ? "View Score" : "Next Question"}
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {answered && hideCorrectBeforeSubmit && (
+        <div className="animate-fade-in">
+          <button
+            onClick={() => {
+              setSelected(null);
+              setAnswered(false);
+              onNext();
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg hero-gradient text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
+          >
+            {isLast ? "Submit Test" : "Next Question"}
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
