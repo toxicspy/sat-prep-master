@@ -2,10 +2,12 @@ import Layout from "@/components/Layout";
 import PerformanceChart from "@/components/PerformanceChart";
 import StreakBadge from "@/components/StreakBadge";
 import XPDisplay from "@/components/XPDisplay";
+import PracticeHeatmap from "@/components/PracticeHeatmap";
+import PlatformComparison from "@/components/PlatformComparison";
 import { getStats, getTopicStats } from "@/lib/storage";
 import { topicLabels, Topic } from "@/data/questions";
 import { Link } from "react-router-dom";
-import { Calculator, FileText, Hash, TrendingUp, Award, Percent } from "lucide-react";
+import { Calculator, FileText, Hash, TrendingUp, Award, Percent, Clock } from "lucide-react";
 
 const Dashboard = () => {
   const { totalTests, avgScore, highestScore, accuracyRate, recentAttempts } = getStats();
@@ -14,6 +16,15 @@ const Dashboard = () => {
   const topicEntries = Object.entries(topicStats)
     .map(([t, s]) => ({ topic: t, label: topicLabels[t as Topic] || t, ...s }))
     .sort((a, b) => b.pct - a.pct);
+
+  // Compute average time per question across all attempts
+  const allTimes: number[] = [];
+  recentAttempts.forEach((a) => {
+    if (a.questionTimes) {
+      Object.values(a.questionTimes).forEach((t) => allTimes.push(t));
+    }
+  });
+  const avgTimePerQ = allTimes.length > 0 ? Math.round(allTimes.reduce((s, t) => s + t, 0) / allTimes.length) : 0;
 
   return (
     <Layout>
@@ -28,12 +39,13 @@ const Dashboard = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
           {[
             { icon: Hash, label: "Tests Taken", value: String(totalTests), color: "text-primary" },
             { icon: TrendingUp, label: "Average Score", value: `${avgScore}%`, color: "text-primary" },
             { icon: Award, label: "Highest Score", value: `${highestScore}%`, color: "text-success" },
             { icon: Percent, label: "Accuracy Rate", value: `${accuracyRate}%`, color: "text-primary" },
+            { icon: Clock, label: "Avg Time/Q", value: avgTimePerQ > 0 ? `${avgTimePerQ}s` : "—", color: "text-primary" },
           ].map((s) => (
             <div key={s.label} className="p-5 rounded-xl border bg-card card-shadow">
               <s.icon className={`w-8 h-8 ${s.color} mb-3`} />
@@ -43,10 +55,20 @@ const Dashboard = () => {
           ))}
         </div>
 
+        {/* Practice Heatmap */}
+        <div className="mb-10">
+          <PracticeHeatmap />
+        </div>
+
         {/* Performance Chart */}
         <div className="p-6 rounded-xl border bg-card card-shadow mb-10">
           <h2 className="text-lg font-semibold mb-4 font-sans">Performance Trend</h2>
           <PerformanceChart attempts={recentAttempts} />
+        </div>
+
+        {/* Platform Comparison */}
+        <div className="mb-10">
+          <PlatformComparison />
         </div>
 
         {/* Topic Performance */}

@@ -1,27 +1,34 @@
 import { useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import StudyRecommendations from "@/components/StudyRecommendations";
+import MistakePatterns from "@/components/MistakePatterns";
+import TimeAnalysis from "@/components/TimeAnalysis";
 import { allQuestions, Question, topicLabels, Topic } from "@/data/questions";
-import { CheckCircle2, XCircle, ChevronDown, ChevronUp, Home } from "lucide-react";
+import { CheckCircle2, XCircle, ChevronDown, ChevronUp, Home, RefreshCw, Clock } from "lucide-react";
 
 const ReviewTest = () => {
   const [params] = useSearchParams();
+  const navigate = useNavigate();
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [filter, setFilter] = useState<"all" | "correct" | "wrong">("all");
 
   let answers: Record<number, number> = {};
   let topicScores: Record<string, { correct: number; total: number }> = {};
+  let questionTimes: Record<number, number> = {};
   try {
     const rawA = params.get("answers");
     if (rawA) answers = JSON.parse(decodeURIComponent(rawA));
     const rawT = params.get("topics");
     if (rawT) topicScores = JSON.parse(decodeURIComponent(rawT));
+    const rawTm = params.get("times");
+    if (rawTm) questionTimes = JSON.parse(decodeURIComponent(rawTm));
   } catch {}
 
   const questionIds = Object.keys(answers).map(Number);
-  const questions = questionIds.map((id) => allQuestions.find((q) => q.id === id)).filter(Boolean) as Question[];
+  const allReviewQuestions = questionIds.map((id) => allQuestions.find((q) => q.id === id)).filter(Boolean) as Question[];
 
-  if (questions.length === 0) {
+  if (allReviewQuestions.length === 0) {
     return (
       <Layout>
         <div className="container max-w-2xl py-16 text-center">
@@ -35,35 +42,82 @@ const ReviewTest = () => {
     );
   }
 
-  const correctCount = questions.filter((q) => answers[q.id] === q.correct).length;
+  const correctCount = allReviewQuestions.filter((q) => answers[q.id] === q.correct).length;
+  const wrongIds = allReviewQuestions.filter((q) => answers[q.id] !== q.correct).map((q) => q.id);
+
+  const questions = filter === "all"
+    ? allReviewQuestions
+    : filter === "correct"
+    ? allReviewQuestions.filter((q) => answers[q.id] === q.correct)
+    : allReviewQuestions.filter((q) => answers[q.id] !== q.correct);
+
+  const handleRetakeWrong = () => {
+    const encoded = encodeURIComponent(JSON.stringify(wrongIds));
+    navigate(`/practice/retake?ids=${encoded}`);
+  };
+
+  const formatTime = (s: number) => s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${s % 60}s`;
 
   return (
     <Layout>
       <div className="container max-w-3xl py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Test Review</h1>
-          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
-            <Home className="w-4 h-4" /> Home
-          </Link>
+          <div className="flex items-center gap-2">
+            {wrongIds.length > 0 && (
+              <button
+                onClick={handleRetakeWrong}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-destructive/30 text-destructive rounded-lg hover:bg-destructive/5 transition-colors"
+              >
+                <RefreshCw className="w-3.5 h-3.5" /> Retake Wrong ({wrongIds.length})
+              </button>
+            )}
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
+              <Home className="w-4 h-4" /> Home
+            </Link>
+          </div>
         </div>
 
-        <div className="grid sm:grid-cols-3 gap-4 mb-8">
+        <div className="grid sm:grid-cols-3 gap-4 mb-6">
           <div className="p-4 rounded-xl border bg-card card-shadow text-center">
-            <div className="text-2xl font-bold text-primary">{correctCount}/{questions.length}</div>
+            <div className="text-2xl font-bold text-primary">{correctCount}/{allReviewQuestions.length}</div>
             <div className="text-xs text-muted-foreground">Correct</div>
           </div>
           <div className="p-4 rounded-xl border bg-card card-shadow text-center">
-            <div className="text-2xl font-bold text-success">
-              {questions.filter((q) => answers[q.id] === q.correct).length}
-            </div>
+            <div className="text-2xl font-bold text-success">{correctCount}</div>
             <div className="text-xs text-muted-foreground">Right Answers</div>
           </div>
           <div className="p-4 rounded-xl border bg-card card-shadow text-center">
-            <div className="text-2xl font-bold text-destructive">
-              {questions.filter((q) => answers[q.id] !== q.correct).length}
-            </div>
+            <div className="text-2xl font-bold text-destructive">{wrongIds.length}</div>
             <div className="text-xs text-muted-foreground">Wrong Answers</div>
           </div>
+        </div>
+
+        {/* Time & Mistake Analysis */}
+        {Object.keys(questionTimes).length > 0 && (
+          <div className="mb-6">
+            <TimeAnalysis questionTimes={questionTimes} answers={answers} />
+          </div>
+        )}
+        {Object.keys(answers).length > 0 && (
+          <div className="mb-6">
+            <MistakePatterns answers={answers} questionTimes={Object.keys(questionTimes).length > 0 ? questionTimes : undefined} />
+          </div>
+        )}
+
+        {/* Filter Tabs */}
+        <div className="flex gap-1 mb-4 p-1 rounded-lg bg-muted w-fit">
+          {(["all", "correct", "wrong"] as const).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${
+                filter === f ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {f} {f === "all" ? `(${allReviewQuestions.length})` : f === "correct" ? `(${correctCount})` : `(${wrongIds.length})`}
+            </button>
+          ))}
         </div>
 
         <div className="space-y-3 mb-8">
@@ -71,6 +125,7 @@ const ReviewTest = () => {
             const userAnswer = answers[q.id];
             const isCorrect = userAnswer === q.correct;
             const expanded = expandedId === q.id;
+            const timeSpent = questionTimes[q.id];
 
             return (
               <div key={q.id} className="rounded-xl border bg-card card-shadow overflow-hidden">
@@ -89,7 +144,14 @@ const ReviewTest = () => {
                       {q.question.length > 60 ? "…" : ""}
                     </span>
                   </div>
-                  {expanded ? <ChevronUp className="w-4 h-4 shrink-0" /> : <ChevronDown className="w-4 h-4 shrink-0" />}
+                  <div className="flex items-center gap-2">
+                    {timeSpent !== undefined && (
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="w-3 h-3" /> {formatTime(timeSpent)}
+                      </span>
+                    )}
+                    {expanded ? <ChevronUp className="w-4 h-4 shrink-0" /> : <ChevronDown className="w-4 h-4 shrink-0" />}
+                  </div>
                 </button>
 
                 {expanded && (
