@@ -1,5 +1,7 @@
 import Layout from "@/components/Layout";
 import QuestionOfTheDay from "@/components/QuestionOfTheDay";
+import SEOHead from "@/components/SEOHead";
+import AdSlot from "@/components/AdSlot";
 import { Link } from "react-router-dom";
 import { BookOpen, Calculator, FileText, BarChart3, ArrowRight, Shuffle, Clock, Target } from "lucide-react";
 
@@ -12,6 +14,19 @@ const features = [
 
 const Index = () => (
   <Layout>
+    <SEOHead
+      title="SAT Ace Pro — Free SAT Practice & Mock Tests | 70+ Questions"
+      description="Free SAT exam simulation with timed mock tests, difficulty filters, topic breakdowns, and progress tracking. 70+ original SAT-style questions."
+      canonical="/"
+      jsonLd={{
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        name: "SAT Ace Pro",
+        url: "https://satacepro.com",
+        description: "Free SAT practice with timed mock tests, topic breakdowns, and progress tracking.",
+        sameAs: [],
+      }}
+    />
     {/* Hero */}
     <section className="hero-gradient py-20 md:py-28">
       <div className="container text-center">
@@ -38,6 +53,11 @@ const Index = () => (
       </div>
     </section>
 
+    {/* Leaderboard Ad — top of page, desktop only */}
+    <AdSlot format="leaderboard" className="my-4" />
+    {/* Mobile banner ad */}
+    <AdSlot format="banner" className="my-4" />
+
     {/* Features */}
     <section className="py-16 md:py-20">
       <div className="container">
@@ -56,6 +76,9 @@ const Index = () => (
         </div>
       </div>
     </section>
+
+    {/* In-article ad between sections */}
+    <AdSlot format="in-article" className="my-6 container" />
 
     {/* Question of the Day + Stats */}
     <section className="py-16 bg-muted">
@@ -85,6 +108,9 @@ const Index = () => (
         </div>
       </div>
     </section>
+
+    {/* Rectangle ad before CTA */}
+    <AdSlot format="rectangle" className="my-6" />
 
     {/* CTA */}
     <section className="py-16 md:py-20">
