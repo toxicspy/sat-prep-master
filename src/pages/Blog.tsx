@@ -1,13 +1,21 @@
 import Layout from "@/components/Layout";
+import SEOHead from "@/components/SEOHead";
+import AdSlot from "@/components/AdSlot";
 import { Link, useParams } from "react-router-dom";
 import { blogPosts } from "@/data/blogPosts";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
-
 const BlogList = () => (
   <Layout>
+    <SEOHead
+      title="SAT Prep Blog — Tips & Strategies | SAT Ace Pro"
+      description="Expert SAT preparation tips, study strategies, and guides to help you achieve your best score."
+      canonical="/blog"
+    />
     <div className="container max-w-3xl py-10">
       <h1 className="text-3xl font-bold mb-2">SAT Prep Blog</h1>
-      <p className="text-muted-foreground mb-8">Tips, strategies, and guides to help you ace the SAT.</p>
+      <p className="text-muted-foreground mb-4">Tips, strategies, and guides to help you ace the SAT.</p>
+      <AdSlot format="leaderboard" className="mb-6" />
+      <AdSlot format="banner" className="mb-6" />
       <div className="space-y-4">
         {blogPosts.map((post) => (
           <Link
@@ -43,6 +51,20 @@ const BlogPost = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title={`${post.title} | SAT Ace Pro Blog`}
+        description={post.excerpt}
+        canonical={`/blog/${post.slug}`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt,
+          datePublished: post.date,
+          author: { "@type": "Organization", name: "SAT Ace Pro" },
+          publisher: { "@type": "Organization", name: "SAT Ace Pro" },
+        }}
+      />
       <article className="container max-w-3xl py-10">
         <Link to="/blog" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="w-3.5 h-3.5" /> Back to Blog
@@ -52,6 +74,7 @@ const BlogPost = () => {
           <span className="inline-flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {post.date}</span>
           <span className="inline-flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {post.readTime}</span>
         </div>
+        <AdSlot format="in-article" className="my-6" />
         <div className="prose prose-sm max-w-none">
           {post.content.split("\n\n").map((para, i) => {
             if (para.startsWith("**") && para.endsWith("**")) {
