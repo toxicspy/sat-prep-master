@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 import AdSlot from "@/components/AdSlot";
+import FAQSection, { satFAQs, getFAQJsonLd } from "@/components/FAQSection";
 import { Link, useParams } from "react-router-dom";
 import { blogPosts } from "@/data/blogPosts";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
@@ -10,6 +11,7 @@ const BlogList = () => (
       title="SAT Prep Blog — Tips & Strategies | SAT Ace Pro"
       description="Expert SAT preparation tips, study strategies, and guides to help you achieve your best score."
       canonical="/blog"
+      jsonLd={getFAQJsonLd(satFAQs)}
     />
     <div className="container max-w-3xl py-10">
       <h1 className="text-3xl font-bold mb-2">SAT Prep Blog</h1>
@@ -32,6 +34,8 @@ const BlogList = () => (
           </Link>
         ))}
       </div>
+      <AdSlot format="rectangle" className="my-8" />
+      <FAQSection />
     </div>
   </Layout>
 );

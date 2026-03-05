@@ -123,7 +123,7 @@ const FAQSection = ({
       </h2>
       <div className="rounded-xl border bg-card overflow-hidden divide-y divide-border">
         {faqs.map((faq, i) => (
-          <div key={i}>
+          <div key={i} data-faq={i}>
             <button
               onClick={() => toggle(i)}
               className="w-full flex items-center justify-between px-5 py-4 text-left gap-3 hover:bg-accent/40 transition-colors"
