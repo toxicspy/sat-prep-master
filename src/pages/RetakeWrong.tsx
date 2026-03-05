@@ -17,7 +17,6 @@ const RetakeWrong = () => {
   const answersRef = useRef<Record<number, number>>({});
   const questionTimesRef = useRef<Record<number, number>>({});
   const [clearedIds, setClearedIds] = useState<number[]>([]);
-  const questionTimesRef = useRef<Record<number, number>>({});
 
   let ids: number[] = [];
   try {

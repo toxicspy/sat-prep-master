@@ -13,7 +13,6 @@ const Score = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const hasRecorded = useRef(false);
-  const navigate = useNavigate();
   const correct = Number(params.get("correct") || 0);
   const total = Number(params.get("total") || 1);
   const section = params.get("section") || "Practice";
