@@ -9,6 +9,7 @@ const navLinks = [
   { to: "/practice/reading", label: "Reading" },
   { to: "/mock-test", label: "Mock Test" },
   { to: "/sat-simulation", label: "Full SAT" },
+  { to: "/improvement-zone", label: "Improvement" },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/college-insights", label: "College Insights" },
   { to: "/blog", label: "Blog" },

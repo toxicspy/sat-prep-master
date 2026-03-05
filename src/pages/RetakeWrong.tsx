@@ -5,7 +5,8 @@ import QuestionCard from "@/components/QuestionCard";
 import { allQuestions, Question } from "@/data/questions";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
-import { RefreshCw } from "lucide-react";
+import { recordCorrectRetake } from "@/lib/mistakes";
+import { RefreshCw, Award } from "lucide-react";
 
 const RetakeWrong = () => {
   const [params] = useSearchParams();
@@ -14,6 +15,8 @@ const RetakeWrong = () => {
   const [score, setScore] = useState(0);
   const topicScores = useRef<Record<string, { correct: number; total: number }>>({});
   const answersRef = useRef<Record<number, number>>({});
+  const questionTimesRef = useRef<Record<number, number>>({});
+  const [clearedIds, setClearedIds] = useState<number[]>([]);
   const questionTimesRef = useRef<Record<number, number>>({});
 
   let ids: number[] = [];
@@ -44,6 +47,9 @@ const RetakeWrong = () => {
     if (correct) {
       topicScores.current[q.topic].correct += 1;
       setScore((s) => s + 1);
+      // Track correct retake for auto-improvement
+      const wasCleared = recordCorrectRetake(q.id);
+      if (wasCleared) setClearedIds((prev) => [...prev, q.id]);
     }
   };
 
