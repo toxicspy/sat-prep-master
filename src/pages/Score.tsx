@@ -105,6 +105,12 @@ const Score = () => {
               </button>
             )}
             <Link
+              to="/improvement-zone"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-primary/30 text-primary rounded-lg font-medium text-sm hover:bg-primary/5 transition-colors"
+            >
+              <Brain className="w-4 h-4" /> Improvement Zone
+            </Link>
+            <Link
               to={retryPath}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 border rounded-lg font-medium text-sm hover:bg-muted transition-colors"
             >
