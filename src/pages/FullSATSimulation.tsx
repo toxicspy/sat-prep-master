@@ -6,6 +6,7 @@ import Timer from "@/components/Timer";
 import { mathQuestions, readingQuestions, Question, Difficulty } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
+import { recordSingleMistake } from "@/lib/mistakes";
 import { Play, BookOpen, Calculator, Coffee, ChevronRight } from "lucide-react";
 
 function shuffle<T>(arr: T[]): T[] {
@@ -44,13 +45,15 @@ const FullSATSimulation = () => {
   const currentQuestions = phase === "reading" ? readingQs : mathQs;
   const currentTopics = phase === "reading" ? readingTopics : mathTopics;
 
-  const recordAnswer = (q: Question, correct: boolean) => {
+  const recordAnswer = (q: Question, correct: boolean, selectedIndex?: number) => {
     if (!currentTopics.current[q.topic]) currentTopics.current[q.topic] = { correct: 0, total: 0 };
     currentTopics.current[q.topic].total += 1;
     if (correct) {
       currentTopics.current[q.topic].correct += 1;
       if (phase === "reading") setReadingScore((s) => s + 1);
       else setMathScore((s) => s + 1);
+    } else if (selectedIndex !== undefined) {
+      recordSingleMistake(q, selectedIndex, 0);
     }
   };
 
@@ -238,7 +241,7 @@ const FullSATSimulation = () => {
             question={currentQuestions[current]}
             index={current}
             total={currentQuestions.length}
-            onAnswer={(correct) => recordAnswer(currentQuestions[current], correct)}
+            onAnswer={(correct, selectedIndex) => recordAnswer(currentQuestions[current], correct, selectedIndex)}
             onNext={handleNext}
             isLast={current >= currentQuestions.length - 1}
           />

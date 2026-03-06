@@ -7,6 +7,7 @@ import Timer from "@/components/Timer";
 import { readingQuestions, Difficulty, Question } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
+import { recordSingleMistake } from "@/lib/mistakes";
 import { FileText, Clock } from "lucide-react";
 
 const TIMER_SECONDS = 35 * 60;
@@ -41,6 +42,8 @@ const ReadingPractice = () => {
     if (correct) {
       topicScores.current[q.topic].correct += 1;
       setScore((s) => s + 1);
+    } else {
+      recordSingleMistake(q, selectedIndex, questionTimesRef.current[q.id] ?? 0);
     }
   };
 
