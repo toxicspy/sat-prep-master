@@ -1,8 +1,10 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Question } from "@/data/questions";
-import { CheckCircle2, XCircle, ChevronRight, Bookmark, Lightbulb, Target } from "lucide-react";
+import { CheckCircle2, XCircle, ChevronRight, Bookmark, Lightbulb, Target, BookOpen } from "lucide-react";
 import { isBookmarked, toggleBookmark } from "@/lib/gamification";
 import { getStrategyTip } from "@/lib/strategyTips";
+import { getNotesForQuestionTopic } from "@/data/notes";
 
 interface Props {
   question: Question;
@@ -46,6 +48,7 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast, hideCo
   const [startTime] = useState(() => Date.now());
 
   const tip = useMemo(() => getStrategyTip(question.topic), [question.id]);
+  const relatedNotes = useMemo(() => getNotesForQuestionTopic(question.topic), [question.topic]);
 
   const handleSelect = (optIndex: number) => {
     if (answered) return;
@@ -136,6 +139,15 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast, hideCo
             <p className="text-sm font-medium text-accent-foreground mb-1">Explanation</p>
             <p className="text-sm text-muted-foreground">{question.explanation}</p>
             <SimpleExplanation explanation={question.explanation} />
+            {relatedNotes.length > 0 && (
+              <Link
+                to="/notes"
+                className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                View Related Notes ({relatedNotes[0].title})
+              </Link>
+            )}
           </div>
           <button
             onClick={() => {

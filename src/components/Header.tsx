@@ -12,6 +12,7 @@ const navLinks = [
   { to: "/improvement-zone", label: "Improvement" },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/college-insights", label: "College Insights" },
+  { to: "/notes", label: "Notes" },
   { to: "/blog", label: "Blog" },
 ];
 
