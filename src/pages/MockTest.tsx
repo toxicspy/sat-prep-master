@@ -7,6 +7,7 @@ import DifficultyFilter from "@/components/DifficultyFilter";
 import { allQuestions, Question, Difficulty } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
+import { recordSingleMistake } from "@/lib/mistakes";
 import { Shuffle, Clock, Play, Zap, Pause, RotateCcw } from "lucide-react";
 
 function shuffle<T>(arr: T[]): T[] {
@@ -165,6 +166,8 @@ const MockTest = () => {
     if (correct) {
       topicScores.current[q.topic].correct += 1;
       setScore((s) => s + 1);
+    } else {
+      recordSingleMistake(q, selectedIndex, questionTimesRef.current[q.id] ?? 0);
     }
     adaptDifficulty(correct);
   };

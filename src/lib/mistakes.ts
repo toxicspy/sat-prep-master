@@ -60,50 +60,55 @@ function saveMistakes(mistakes: MistakeRecord[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(mistakes));
 }
 
-/** Record incorrect answers from a test submission */
+/** Record a single incorrect answer immediately */
+export function recordSingleMistake(
+  q: { id: number; question: string; options: string[]; correct: number; explanation: string; topic: Topic; section: string; difficulty: Difficulty; passage?: string },
+  selectedAnswer: number,
+  timeSpent: number
+): void {
+  const existing = getMistakes();
+  const idx = existing.findIndex((m) => m.question_id === q.id);
+
+  if (idx !== -1) {
+    // Update existing mistake
+    existing[idx].selected_answer = selectedAnswer;
+    existing[idx].time_spent = timeSpent;
+    existing[idx].date_attempted = new Date().toISOString();
+    existing[idx].correct_streak = 0;
+    existing[idx].is_cleared = false;
+  } else {
+    existing.push({
+      question_id: q.id,
+      question_text: q.question,
+      options: q.options,
+      selected_answer: selectedAnswer,
+      correct_answer: q.correct,
+      explanation: q.explanation,
+      topic: q.topic,
+      section: q.section,
+      difficulty: q.difficulty,
+      time_spent: timeSpent,
+      date_attempted: new Date().toISOString(),
+      correct_streak: 0,
+      is_cleared: false,
+      passage: q.passage,
+    });
+  }
+
+  saveMistakes(existing);
+}
+
+/** Record incorrect answers from a test submission (batch — kept for backward compat) */
 export function recordMistakes(
   answers: Record<number, number>,
   questions: { id: number; question: string; options: string[]; correct: number; explanation: string; topic: Topic; section: string; difficulty: Difficulty; passage?: string }[],
   questionTimes: Record<number, number>
 ): void {
-  const existing = getMistakes();
-  const existingIds = new Set(existing.map((m) => m.question_id));
-
   questions.forEach((q) => {
     const selectedAnswer = answers[q.id];
-    if (selectedAnswer === undefined || selectedAnswer === q.correct) return; // skip correct
-
-    if (existingIds.has(q.id)) {
-      // Update existing mistake with new attempt data
-      const idx = existing.findIndex((m) => m.question_id === q.id);
-      if (idx !== -1) {
-        existing[idx].selected_answer = selectedAnswer;
-        existing[idx].time_spent = questionTimes[q.id] ?? 0;
-        existing[idx].date_attempted = new Date().toISOString();
-        existing[idx].correct_streak = 0; // reset streak on new mistake
-        existing[idx].is_cleared = false;
-      }
-    } else {
-      existing.push({
-        question_id: q.id,
-        question_text: q.question,
-        options: q.options,
-        selected_answer: selectedAnswer,
-        correct_answer: q.correct,
-        explanation: q.explanation,
-        topic: q.topic,
-        section: q.section,
-        difficulty: q.difficulty,
-        time_spent: questionTimes[q.id] ?? 0,
-        date_attempted: new Date().toISOString(),
-        correct_streak: 0,
-        is_cleared: false,
-        passage: q.passage,
-      });
-    }
+    if (selectedAnswer === undefined || selectedAnswer === q.correct) return;
+    recordSingleMistake(q, selectedAnswer, questionTimes[q.id] ?? 0);
   });
-
-  saveMistakes(existing);
 }
 
 /** Record a correct retake answer — increment streak, auto-clear at threshold */
