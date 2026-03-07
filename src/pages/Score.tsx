@@ -1,18 +1,21 @@
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import TopicBreakdown from "@/components/TopicBreakdown";
 import StudyRecommendations from "@/components/StudyRecommendations";
 import MistakePatterns from "@/components/MistakePatterns";
 import TimeAnalysis from "@/components/TimeAnalysis";
+import BadgeModal from "@/components/BadgeModal";
 import { Trophy, RotateCcw, Home, BarChart3, Eye, Star, RefreshCw, Brain } from "lucide-react";
 import { allQuestions } from "@/data/questions";
 import { recordMistakes } from "@/lib/mistakes";
+import { saveEarnedBadge } from "@/lib/gamification";
 
 const Score = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const hasRecorded = useRef(false);
+  const [showBadge, setShowBadge] = useState(true);
   const correct = Number(params.get("correct") || 0);
   const total = Number(params.get("total") || 1);
   const section = params.get("section") || "Practice";
