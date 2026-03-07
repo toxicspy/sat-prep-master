@@ -73,6 +73,13 @@ const Score = () => {
 
   return (
     <Layout>
+      <BadgeModal
+        open={showBadge}
+        onClose={() => setShowBadge(false)}
+        correct={correct}
+        total={total}
+        section={section}
+      />
       <div className="container max-w-2xl py-12">
         <div className="p-8 rounded-xl border bg-card card-shadow-md mb-6">
           <div className="text-center">
