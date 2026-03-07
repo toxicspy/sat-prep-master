@@ -135,3 +135,65 @@ export function getNextLevel(totalXP: number): { label: string; xpNeeded: number
   const next = LEVELS.find(l => l.min > totalXP);
   return next ? { label: next.label, xpNeeded: next.min - totalXP } : null;
 }
+
+// --- Score Badges ---
+export interface ScoreBadge {
+  id: string;
+  label: string;
+  emoji: string;
+  minPct: number;
+  color: string; // tailwind token-friendly class
+}
+
+const SCORE_BADGES: ScoreBadge[] = [
+  { id: "master", label: "Master", emoji: "👑", minPct: 90, color: "text-yellow-500" },
+  { id: "gold", label: "Gold", emoji: "🥇", minPct: 75, color: "text-amber-500" },
+  { id: "silver", label: "Silver", emoji: "🥈", minPct: 60, color: "text-slate-400" },
+  { id: "bronze", label: "Bronze", emoji: "🥉", minPct: 40, color: "text-orange-700" },
+  { id: "practice", label: "Keep Practicing", emoji: "💪", minPct: 0, color: "text-muted-foreground" },
+];
+
+export function getBadgeForScore(pct: number): ScoreBadge {
+  return SCORE_BADGES.find(b => pct >= b.minPct) || SCORE_BADGES[SCORE_BADGES.length - 1];
+}
+
+// --- Badge History ---
+const BADGES_HISTORY_KEY = "sat-ace-pro-badges";
+
+export interface EarnedBadge {
+  badgeId: string;
+  label: string;
+  emoji: string;
+  score: number;
+  total: number;
+  pct: number;
+  section: string;
+  date: string;
+}
+
+export function getEarnedBadges(): EarnedBadge[] {
+  try {
+    const raw = localStorage.getItem(BADGES_HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+export function saveEarnedBadge(correct: number, total: number, section: string): EarnedBadge {
+  const pct = Math.round((correct / total) * 100);
+  const badge = getBadgeForScore(pct);
+  const entry: EarnedBadge = {
+    badgeId: badge.id,
+    label: badge.label,
+    emoji: badge.emoji,
+    score: correct,
+    total,
+    pct,
+    section,
+    date: new Date().toISOString(),
+  };
+  const history = getEarnedBadges();
+  history.push(entry);
+  // keep last 100
+  localStorage.setItem(BADGES_HISTORY_KEY, JSON.stringify(history.slice(-100)));
+  return entry;
+}

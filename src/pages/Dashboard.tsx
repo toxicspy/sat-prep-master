@@ -6,8 +6,9 @@ import PracticeHeatmap from "@/components/PracticeHeatmap";
 import PlatformComparison from "@/components/PlatformComparison";
 import { getStats, getTopicStats } from "@/lib/storage";
 import { topicLabels, Topic } from "@/data/questions";
+import { getEarnedBadges } from "@/lib/gamification";
 import { Link } from "react-router-dom";
-import { Calculator, FileText, Hash, TrendingUp, Award, Percent, Clock } from "lucide-react";
+import { Calculator, FileText, Hash, TrendingUp, Award, Percent, Clock, Medal } from "lucide-react";
 
 const Dashboard = () => {
   const { totalTests, avgScore, highestScore, accuracyRate, recentAttempts } = getStats();
@@ -127,6 +128,32 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Badge History */}
+        {(() => {
+          const badges = getEarnedBadges();
+          if (badges.length === 0) return null;
+          const recent = badges.slice(-10).reverse();
+          return (
+            <div className="p-6 rounded-xl border bg-card card-shadow mb-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Medal className="w-5 h-5 text-primary" />
+                <h2 className="text-lg font-semibold font-sans">Earned Badges</h2>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {recent.map((b, i) => (
+                  <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg border bg-muted/50 text-sm">
+                    <span className="text-xl">{b.emoji}</span>
+                    <div>
+                      <div className="font-medium">{b.label}</div>
+                      <div className="text-xs text-muted-foreground">{b.section} · {b.pct}%</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Practice Links */}
         <h2 className="text-xl font-semibold mb-4">Practice Sections</h2>

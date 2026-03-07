@@ -1,18 +1,21 @@
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import TopicBreakdown from "@/components/TopicBreakdown";
 import StudyRecommendations from "@/components/StudyRecommendations";
 import MistakePatterns from "@/components/MistakePatterns";
 import TimeAnalysis from "@/components/TimeAnalysis";
+import BadgeModal from "@/components/BadgeModal";
 import { Trophy, RotateCcw, Home, BarChart3, Eye, Star, RefreshCw, Brain } from "lucide-react";
 import { allQuestions } from "@/data/questions";
 import { recordMistakes } from "@/lib/mistakes";
+import { saveEarnedBadge } from "@/lib/gamification";
 
 const Score = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const hasRecorded = useRef(false);
+  const [showBadge, setShowBadge] = useState(true);
   const correct = Number(params.get("correct") || 0);
   const total = Number(params.get("total") || 1);
   const section = params.get("section") || "Practice";
@@ -33,13 +36,14 @@ const Score = () => {
 
   const hasAnswers = !!params.get("answers");
 
-  // Auto-record mistakes on mount
+  // Auto-record mistakes and save badge on mount
   useEffect(() => {
     if (hasRecorded.current || !hasAnswers) return;
     hasRecorded.current = true;
     const questionsWithAnswers = Object.keys(answers).map((id) => allQuestions.find((q) => q.id === Number(id))).filter(Boolean) as typeof allQuestions;
     recordMistakes(answers, questionsWithAnswers, questionTimes);
-  }, [hasAnswers, answers, questionTimes]);
+    saveEarnedBadge(correct, total, section);
+  }, [hasAnswers, answers, questionTimes, correct, total, section]);
 
   // Get wrong question IDs for retake mode
   const wrongIds = Object.entries(answers)
@@ -69,6 +73,13 @@ const Score = () => {
 
   return (
     <Layout>
+      <BadgeModal
+        open={showBadge}
+        onClose={() => setShowBadge(false)}
+        correct={correct}
+        total={total}
+        section={section}
+      />
       <div className="container max-w-2xl py-12">
         <div className="p-8 rounded-xl border bg-card card-shadow-md mb-6">
           <div className="text-center">
