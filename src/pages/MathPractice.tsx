@@ -9,6 +9,7 @@ import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
 import { recordSingleMistake } from "@/lib/mistakes";
 import { Calculator, Clock } from "lucide-react";
+import MotivationalPopup, { shouldShowMotivational } from "@/components/MotivationalPopup";
 
 const TIMER_SECONDS = 35 * 60;
 
@@ -22,6 +23,7 @@ const MathPractice = () => {
   const answersRef = useRef<Record<number, number>>({});
   const questionTimesRef = useRef<Record<number, number>>({});
   const elapsedRef = useRef(0);
+  const [showMotivational, setShowMotivational] = useState(false);
   const navigate = useNavigate();
 
   const filtered = difficulty === "mixed" ? mathQuestions : mathQuestions.filter((q) => q.difficulty === difficulty);
@@ -77,8 +79,17 @@ const MathPractice = () => {
     if (current >= filtered.length - 1) {
       finish(score);
     } else {
-      setCurrent((c) => c + 1);
+      if (shouldShowMotivational(current, filtered.length)) {
+        setShowMotivational(true);
+      } else {
+        setCurrent((c) => c + 1);
+      }
     }
+  };
+
+  const handleMotivationalClose = () => {
+    setShowMotivational(false);
+    setCurrent((c) => c + 1);
   };
 
   if (!started) {
@@ -131,6 +142,12 @@ const MathPractice = () => {
             onTimeSpent={(id, s) => { questionTimesRef.current[id] = s; }}
           />
         </div>
+        <MotivationalPopup
+          currentIndex={current}
+          total={filtered.length}
+          open={showMotivational}
+          onClose={handleMotivationalClose}
+        />
       </div>
     </Layout>
   );

@@ -9,6 +9,7 @@ import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
 import { recordSingleMistake } from "@/lib/mistakes";
 import { Shuffle, Clock, Play, Zap, Pause, RotateCcw } from "lucide-react";
+import MotivationalPopup, { shouldShowMotivational } from "@/components/MotivationalPopup";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -59,6 +60,7 @@ const MockTest = () => {
   const [score, setScore] = useState(saved.current?.score ?? 0);
   const [finished, setFinished] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [showMotivational, setShowMotivational] = useState(false);
   const topicScores = useRef<Record<string, { correct: number; total: number }>>(saved.current?.topicScores ?? {});
   const answersRef = useRef<Record<number, number>>(saved.current?.answers ?? {});
   const questionTimesRef = useRef<Record<number, number>>(saved.current?.questionTimes ?? {});
@@ -207,8 +209,17 @@ const MockTest = () => {
     if (current >= questions.length - 1) {
       finishTest(score);
     } else {
-      setCurrent((c) => c + 1);
+      if (shouldShowMotivational(current, questions.length)) {
+        setShowMotivational(true);
+      } else {
+        setCurrent((c) => c + 1);
+      }
     }
+  };
+
+  const handleMotivationalClose = () => {
+    setShowMotivational(false);
+    setCurrent((c) => c + 1);
   };
 
   const handleTimeUp = useCallback(() => {
@@ -315,6 +326,12 @@ const MockTest = () => {
             onTimeSpent={handleTimeSpent}
           />
         </div>
+        <MotivationalPopup
+          currentIndex={current}
+          total={questions.length}
+          open={showMotivational}
+          onClose={handleMotivationalClose}
+        />
       </div>
     </Layout>
   );

@@ -8,6 +8,7 @@ import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
 import { recordSingleMistake } from "@/lib/mistakes";
 import { Play, BookOpen, Calculator, Coffee, ChevronRight } from "lucide-react";
+import MotivationalPopup, { shouldShowMotivational } from "@/components/MotivationalPopup";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -40,6 +41,7 @@ const FullSATSimulation = () => {
   const readingTopics = useRef<Record<string, { correct: number; total: number }>>({});
   const mathTopics = useRef<Record<string, { correct: number; total: number }>>({});
   const elapsedRef = useRef(0);
+  const [showMotivational, setShowMotivational] = useState(false);
   const navigate = useNavigate();
 
   const currentQuestions = phase === "reading" ? readingQs : mathQs;
@@ -99,8 +101,17 @@ const FullSATSimulation = () => {
     if (current >= currentQuestions.length - 1) {
       finishSection();
     } else {
-      setCurrent((c) => c + 1);
+      if (shouldShowMotivational(current, currentQuestions.length)) {
+        setShowMotivational(true);
+      } else {
+        setCurrent((c) => c + 1);
+      }
     }
+  };
+
+  const handleMotivationalClose = () => {
+    setShowMotivational(false);
+    setCurrent((c) => c + 1);
   };
 
   const handleTimeUp = useCallback(() => {
@@ -246,6 +257,12 @@ const FullSATSimulation = () => {
             isLast={current >= currentQuestions.length - 1}
           />
         </div>
+        <MotivationalPopup
+          currentIndex={current}
+          total={currentQuestions.length}
+          open={showMotivational}
+          onClose={handleMotivationalClose}
+        />
       </div>
     </Layout>
   );
