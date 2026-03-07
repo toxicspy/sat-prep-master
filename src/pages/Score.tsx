@@ -36,13 +36,14 @@ const Score = () => {
 
   const hasAnswers = !!params.get("answers");
 
-  // Auto-record mistakes on mount
+  // Auto-record mistakes and save badge on mount
   useEffect(() => {
     if (hasRecorded.current || !hasAnswers) return;
     hasRecorded.current = true;
     const questionsWithAnswers = Object.keys(answers).map((id) => allQuestions.find((q) => q.id === Number(id))).filter(Boolean) as typeof allQuestions;
     recordMistakes(answers, questionsWithAnswers, questionTimes);
-  }, [hasAnswers, answers, questionTimes]);
+    saveEarnedBadge(correct, total, section);
+  }, [hasAnswers, answers, questionTimes, correct, total, section]);
 
   // Get wrong question IDs for retake mode
   const wrongIds = Object.entries(answers)
