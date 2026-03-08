@@ -8,7 +8,7 @@ import { Calendar, Clock, ArrowLeft } from "lucide-react";
 const BlogList = () => (
   <Layout>
     <SEOHead
-      title="SAT Prep Blog — Tips & Strategies | SAT Ace Pro"
+      title="SAT Prep Blog — Tips & Strategies | Coursingle"
       description="Expert SAT preparation tips, study strategies, and guides to help you achieve your best score."
       canonical="/blog"
       jsonLd={getFAQJsonLd(satFAQs)}
