@@ -36,6 +36,7 @@ const MathPractice = () => {
     topicScores.current = {};
     answersRef.current = {};
     questionTimesRef.current = {};
+    clearTimerStorage(TIMER_KEY);
     setStarted(true);
   };
 
