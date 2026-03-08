@@ -15,7 +15,7 @@ const features = [
 const Index = () => (
   <Layout>
     <SEOHead
-      title="SAT Ace Pro — Free SAT Practice & Mock Tests | 70+ Questions"
+      title="Coursingle — Free SAT Practice & Mock Tests | 70+ Questions"
       description="Free SAT exam simulation with timed mock tests, difficulty filters, topic breakdowns, and progress tracking. 70+ original SAT-style questions."
       canonical="/"
       jsonLd={{
