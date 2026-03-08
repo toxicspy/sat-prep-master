@@ -311,6 +311,7 @@ const MockTest = () => {
               totalSeconds={TIMER_SECONDS - elapsedRef.current}
               onTimeUp={handleTimeUp}
               onElapsed={(s) => { elapsedRef.current = (loadSavedState()?.elapsed ?? 0) + s; }}
+              storageKey="sat-mock-test-timer"
             />
           </div>
         </div>

@@ -128,8 +128,8 @@ const MathPractice = () => {
             <Calculator className="w-6 h-6 text-primary" />
             <h1 className="text-xl font-bold font-sans">SAT Math</h1>
           </div>
-          {timerEnabled && (
-            <Timer totalSeconds={TIMER_SECONDS} onTimeUp={() => finish(score)} onElapsed={(s) => { elapsedRef.current = s; }} />
+          {mode === "exam" && (
+            <Timer totalSeconds={TIMER_SECONDS} onTimeUp={() => finish(score)} onElapsed={(s) => { elapsedRef.current = s; }} storageKey={TIMER_KEY} />
           )}
         </div>
         <div className="p-6 md:p-8 rounded-xl border bg-card card-shadow">
