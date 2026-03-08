@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import QuestionCard from "@/components/QuestionCard";
-import Timer from "@/components/Timer";
+import Timer, { clearTimerStorage } from "@/components/Timer";
 import DifficultyFilter from "@/components/DifficultyFilter";
 import { allQuestions, Question, Difficulty } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
