@@ -3,15 +3,17 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import QuestionCard from "@/components/QuestionCard";
 import DifficultyFilter from "@/components/DifficultyFilter";
-import Timer from "@/components/Timer";
+import Timer, { clearTimerStorage } from "@/components/Timer";
+import ModeSelector, { TestMode } from "@/components/ModeSelector";
 import { mathQuestions, Difficulty, Question } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
 import { recordSingleMistake } from "@/lib/mistakes";
-import { Calculator, Clock } from "lucide-react";
+import { Calculator } from "lucide-react";
 import MotivationalPopup, { shouldShowMotivational } from "@/components/MotivationalPopup";
 
 const TIMER_SECONDS = 35 * 60;
+const TIMER_KEY = "sat-math-practice-timer";
 
 const MathPractice = () => {
   const [difficulty, setDifficulty] = useState<Difficulty | "mixed">("mixed");
