@@ -21,7 +21,7 @@ const Terms = () => (
         <p>While we strive for accuracy in all our content, we make no guarantees about the accuracy or completeness of the information provided. Use our materials as a supplement to your overall study plan.</p>
         
         <h2 className="text-lg font-semibold text-foreground pt-2">Limitation of Liability</h2>
-        <p>SAT Ace Prep shall not be liable for any damages arising from the use of our website or reliance on our content.</p>
+        <p>Coursingle shall not be liable for any damages arising from the use of our website or reliance on our content.</p>
         
         <h2 className="text-lg font-semibold text-foreground pt-2">Changes</h2>
         <p>We reserve the right to modify these Terms at any time. Continued use of the website constitutes acceptance of updated Terms.</p>
