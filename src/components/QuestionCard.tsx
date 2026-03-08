@@ -181,7 +181,7 @@ const QuestionCard = ({ question, index, total, onAnswer, onNext, isLast, hideCo
           <div className="p-4 rounded-lg bg-accent border border-primary/20 mb-4">
             <p className="text-sm font-medium text-accent-foreground mb-1">Explanation</p>
             <p className="text-sm text-muted-foreground">{question.explanation}</p>
-            <SimpleExplanation explanation={question.explanation} />
+            <DetailedExplanation question={question} />
             {relatedNotes.length > 0 && (
               <Link
                 to="/notes"
