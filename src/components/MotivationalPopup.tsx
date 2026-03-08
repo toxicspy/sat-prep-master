@@ -28,8 +28,7 @@ const MotivationalPopup = ({ currentIndex, total, open, onClose }: MotivationalP
   const completed = currentIndex + 1;
   const milestone = Math.max(0, Math.floor(completed / 10) - 1);
   const msg = MESSAGES[milestone % MESSAGES.length];
-  if (!msg) return null;
-  const Icon = msg.icon;
+  const Icon = msg?.icon;
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
@@ -40,6 +39,8 @@ const MotivationalPopup = ({ currentIndex, total, open, onClose }: MotivationalP
       return () => { clearTimeout(t); clearTimeout(autoClose); };
     }
   }, [open, onClose]);
+
+  if (!msg || !Icon) return null;
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
