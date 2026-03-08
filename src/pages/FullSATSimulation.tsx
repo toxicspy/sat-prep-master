@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import QuestionCard from "@/components/QuestionCard";
-import Timer from "@/components/Timer";
+import Timer, { clearTimerStorage } from "@/components/Timer";
 import { mathQuestions, readingQuestions, Question, Difficulty } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
@@ -244,6 +244,7 @@ const FullSATSimulation = () => {
             totalSeconds={SECTION_TIME}
             onTimeUp={handleTimeUp}
             onElapsed={(s) => { elapsedRef.current = s; }}
+            storageKey={`sat-sim-${phase}-timer`}
           />
         </div>
         <div className="p-6 md:p-8 rounded-xl border bg-card card-shadow">

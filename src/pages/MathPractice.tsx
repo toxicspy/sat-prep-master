@@ -3,19 +3,21 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import QuestionCard from "@/components/QuestionCard";
 import DifficultyFilter from "@/components/DifficultyFilter";
-import Timer from "@/components/Timer";
+import Timer, { clearTimerStorage } from "@/components/Timer";
+import ModeSelector, { TestMode } from "@/components/ModeSelector";
 import { mathQuestions, Difficulty, Question } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
 import { recordPracticeDay, addXP, calculateTestXP } from "@/lib/gamification";
 import { recordSingleMistake } from "@/lib/mistakes";
-import { Calculator, Clock } from "lucide-react";
+import { Calculator } from "lucide-react";
 import MotivationalPopup, { shouldShowMotivational } from "@/components/MotivationalPopup";
 
 const TIMER_SECONDS = 35 * 60;
+const TIMER_KEY = "sat-math-practice-timer";
 
 const MathPractice = () => {
   const [difficulty, setDifficulty] = useState<Difficulty | "mixed">("mixed");
-  const [timerEnabled, setTimerEnabled] = useState(false);
+  const [mode, setMode] = useState<TestMode>("practice");
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
   const [started, setStarted] = useState(false);
@@ -34,6 +36,7 @@ const MathPractice = () => {
     topicScores.current = {};
     answersRef.current = {};
     questionTimesRef.current = {};
+    clearTimerStorage(TIMER_KEY);
     setStarted(true);
   };
 
@@ -101,13 +104,12 @@ const MathPractice = () => {
             <h1 className="text-3xl font-bold">SAT Math Practice</h1>
           </div>
           <p className="text-muted-foreground mb-6">Practice SAT-style math questions with instant feedback and explanations.</p>
-          <div className="space-y-4 mb-8">
+          <div className="space-y-6 mb-8">
             <DifficultyFilter selected={difficulty} onChange={setDifficulty} />
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input type="checkbox" checked={timerEnabled} onChange={(e) => setTimerEnabled(e.target.checked)} className="rounded" />
-              <Clock className="w-4 h-4 text-muted-foreground" />
-              Enable 35-minute timer
-            </label>
+            <div>
+              <p className="text-sm font-medium mb-2">Select Mode</p>
+              <ModeSelector selected={mode} onChange={setMode} />
+            </div>
           </div>
           <p className="text-sm text-muted-foreground mb-6">{filtered.length} questions available</p>
           <button onClick={handleStart} className="px-6 py-3 hero-gradient text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity">
@@ -126,8 +128,8 @@ const MathPractice = () => {
             <Calculator className="w-6 h-6 text-primary" />
             <h1 className="text-xl font-bold font-sans">SAT Math</h1>
           </div>
-          {timerEnabled && (
-            <Timer totalSeconds={TIMER_SECONDS} onTimeUp={() => finish(score)} onElapsed={(s) => { elapsedRef.current = s; }} />
+          {mode === "exam" && (
+            <Timer totalSeconds={TIMER_SECONDS} onTimeUp={() => finish(score)} onElapsed={(s) => { elapsedRef.current = s; }} storageKey={TIMER_KEY} />
           )}
         </div>
         <div className="p-6 md:p-8 rounded-xl border bg-card card-shadow">

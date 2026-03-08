@@ -2,7 +2,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import QuestionCard from "@/components/QuestionCard";
-import Timer from "@/components/Timer";
+import Timer, { clearTimerStorage } from "@/components/Timer";
 import DifficultyFilter from "@/components/DifficultyFilter";
 import { allQuestions, Question, Difficulty } from "@/data/questions";
 import { saveAttempt, TestAttempt } from "@/lib/storage";
@@ -311,6 +311,7 @@ const MockTest = () => {
               totalSeconds={TIMER_SECONDS - elapsedRef.current}
               onTimeUp={handleTimeUp}
               onElapsed={(s) => { elapsedRef.current = (loadSavedState()?.elapsed ?? 0) + s; }}
+              storageKey="sat-mock-test-timer"
             />
           </div>
         </div>
