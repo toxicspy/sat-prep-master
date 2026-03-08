@@ -17,7 +17,7 @@ const TIMER_KEY = "sat-rw-practice-timer";
 
 const ReadingPractice = () => {
   const [difficulty, setDifficulty] = useState<Difficulty | "mixed">("mixed");
-  const [timerEnabled, setTimerEnabled] = useState(false);
+  const [mode, setMode] = useState<TestMode>("practice");
   const [current, setCurrent] = useState(0);
   const [score, setScore] = useState(0);
   const [started, setStarted] = useState(false);
