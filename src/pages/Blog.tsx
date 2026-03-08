@@ -56,7 +56,7 @@ const BlogPost = () => {
   return (
     <Layout>
       <SEOHead
-        title={`${post.title} | SAT Ace Pro Blog`}
+        title={`${post.title} | Coursingle Blog`}
         description={post.excerpt}
         canonical={`/blog/${post.slug}`}
         jsonLd={{
