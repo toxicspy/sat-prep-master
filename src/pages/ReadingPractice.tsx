@@ -104,13 +104,12 @@ const ReadingPractice = () => {
             <h1 className="text-3xl font-bold">Reading & Writing Practice</h1>
           </div>
           <p className="text-muted-foreground mb-6">Practice SAT-style passage-based questions with instant feedback.</p>
-          <div className="space-y-4 mb-8">
+          <div className="space-y-6 mb-8">
             <DifficultyFilter selected={difficulty} onChange={setDifficulty} />
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input type="checkbox" checked={timerEnabled} onChange={(e) => setTimerEnabled(e.target.checked)} className="rounded" />
-              <Clock className="w-4 h-4 text-muted-foreground" />
-              Enable 35-minute timer
-            </label>
+            <div>
+              <p className="text-sm font-medium mb-2">Select Mode</p>
+              <ModeSelector selected={mode} onChange={setMode} />
+            </div>
           </div>
           <p className="text-sm text-muted-foreground mb-6">{filtered.length} questions available</p>
           <button onClick={handleStart} className="px-6 py-3 hero-gradient text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity">
