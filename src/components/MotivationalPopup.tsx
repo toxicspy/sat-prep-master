@@ -26,8 +26,9 @@ interface MotivationalPopupProps {
 
 const MotivationalPopup = ({ currentIndex, total, open, onClose }: MotivationalPopupProps) => {
   const completed = currentIndex + 1;
-  const milestone = Math.floor(completed / 10) - 1; // which 10-question milestone (0-based)
+  const milestone = Math.max(0, Math.floor(completed / 10) - 1);
   const msg = MESSAGES[milestone % MESSAGES.length];
+  if (!msg) return null;
   const Icon = msg.icon;
   const [animate, setAnimate] = useState(false);
 
