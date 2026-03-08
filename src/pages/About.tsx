@@ -4,8 +4,8 @@ import SEOHead from "@/components/SEOHead";
 const About = () => (
   <Layout>
     <SEOHead
-      title="About SAT Ace Pro — Free SAT Practice Platform"
-      description="SAT Ace Pro is a free, student-focused SAT preparation platform with original questions, timed tests, and progress tracking."
+      title="About Coursingle — Free SAT Practice Platform"
+      description="Coursingle is a free, student-focused SAT preparation platform with original questions, timed tests, and progress tracking."
       canonical="/about"
     />
     <div className="container max-w-3xl py-10">
