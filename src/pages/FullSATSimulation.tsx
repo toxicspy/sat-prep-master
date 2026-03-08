@@ -244,6 +244,7 @@ const FullSATSimulation = () => {
             totalSeconds={SECTION_TIME}
             onTimeUp={handleTimeUp}
             onElapsed={(s) => { elapsedRef.current = s; }}
+            storageKey={`sat-sim-${phase}-timer`}
           />
         </div>
         <div className="p-6 md:p-8 rounded-xl border bg-card card-shadow">
