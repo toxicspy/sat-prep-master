@@ -24,7 +24,7 @@ const Privacy = () => (
         <p>Our platform is designed for high school students. We do not knowingly collect personal information from children under 13.</p>
         
         <h2 className="text-lg font-semibold text-foreground pt-2">Contact</h2>
-        <p>If you have questions about this Privacy Policy, please contact us at privacy@sataceprep.com.</p>
+        <p>If you have questions about this Privacy Policy, please contact us at privacy@coursingle.com.</p>
       </div>
     </div>
   </Layout>

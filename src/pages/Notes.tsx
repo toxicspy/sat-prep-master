@@ -123,7 +123,7 @@ const Notes = () => {
   return (
     <Layout>
       <SEOHead
-        title="SAT Study Notes | SAT Ace Pro"
+        title="SAT Study Notes | Coursingle"
         description="Free SAT study notes organized by subject and topic. Clear explanations, formulas, examples, and links to practice questions."
       />
 

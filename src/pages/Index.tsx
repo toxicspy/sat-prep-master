@@ -21,8 +21,8 @@ const Index = () => (
       jsonLd={{
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
-        name: "SAT Ace Pro",
-        url: "https://satacepro.com",
+        name: "Coursingle",
+        url: "https://coursingle.com",
         description: "Free SAT practice with timed mock tests, topic breakdowns, and progress tracking.",
         sameAs: [],
       }}

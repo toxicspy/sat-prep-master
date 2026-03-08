@@ -65,8 +65,8 @@ const BlogPost = () => {
           headline: post.title,
           description: post.excerpt,
           datePublished: post.date,
-          author: { "@type": "Organization", name: "SAT Ace Pro" },
-          publisher: { "@type": "Organization", name: "SAT Ace Pro" },
+          author: { "@type": "Organization", name: "Coursingle" },
+          publisher: { "@type": "Organization", name: "Coursingle" },
         }}
       />
       <article className="container max-w-3xl py-10">

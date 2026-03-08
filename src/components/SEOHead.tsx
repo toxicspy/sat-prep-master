@@ -15,7 +15,7 @@ interface SEOHeadProps {
   jsonLd?: Record<string, unknown>;
 }
 
-const SITE_URL = "https://satacepro.com";
+const SITE_URL = "https://coursingle.com";
 
 const SEOHead = ({ title, description, canonical, jsonLd }: SEOHeadProps) => {
   const { pathname } = useLocation();

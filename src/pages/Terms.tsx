@@ -27,7 +27,7 @@ const Terms = () => (
         <p>We reserve the right to modify these Terms at any time. Continued use of the website constitutes acceptance of updated Terms.</p>
         
         <h2 className="text-lg font-semibold text-foreground pt-2">Contact</h2>
-        <p>For questions about these Terms, contact us at legal@sataceprep.com.</p>
+        <p>For questions about these Terms, contact us at legal@coursingle.com.</p>
       </div>
     </div>
   </Layout>

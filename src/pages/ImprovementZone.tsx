@@ -90,7 +90,7 @@ const ImprovementZone = () => {
   return (
     <Layout>
       <SEOHead
-        title="Improvement Zone — Mistake Review | SAT Ace Pro"
+        title="Improvement Zone — Mistake Review | Coursingle"
         description="Review and practice your SAT mistakes. Track improvement and master weak areas."
         canonical="/improvement-zone"
       />

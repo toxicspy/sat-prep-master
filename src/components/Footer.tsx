@@ -39,7 +39,7 @@ const Footer = () => (
         </div>
       </div>
       <div className="mt-8 pt-6 border-t text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} SAT Ace Pro. All rights reserved.
+        © {new Date().getFullYear()} Coursingle. All rights reserved.
       </div>
     </div>
   </footer>
