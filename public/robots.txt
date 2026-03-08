@@ -4,4 +4,4 @@ Disallow: /score
 Disallow: /review
 Disallow: /practice/retake
 
-Sitemap: https://satacepro.com/sitemap.xml
+Sitemap: https://coursingle.com/sitemap.xml

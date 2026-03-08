@@ -25,7 +25,7 @@ const Header = () => {
       <div className="container flex items-center justify-between h-16">
         <Link to="/" className="flex items-center gap-2 font-serif text-xl font-bold text-primary">
           <BookOpen className="w-6 h-6" />
-          SAT Ace Pro
+          Coursingle
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">

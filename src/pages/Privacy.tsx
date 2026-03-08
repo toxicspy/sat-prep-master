@@ -6,7 +6,7 @@ const Privacy = () => (
       <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
       <div className="space-y-4 text-muted-foreground leading-relaxed text-sm">
         <p><strong className="text-foreground">Last updated:</strong> March 1, 2026</p>
-        <p>SAT Ace Prep ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website.</p>
+        <p>Coursingle ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website.</p>
         
         <h2 className="text-lg font-semibold text-foreground pt-2">Information We Collect</h2>
         <p>We do not require account creation or personal information to use our practice tools. We may collect anonymous usage data such as page views, time spent on pages, and browser type through standard analytics tools.</p>
@@ -24,7 +24,7 @@ const Privacy = () => (
         <p>Our platform is designed for high school students. We do not knowingly collect personal information from children under 13.</p>
         
         <h2 className="text-lg font-semibold text-foreground pt-2">Contact</h2>
-        <p>If you have questions about this Privacy Policy, please contact us at privacy@sataceprep.com.</p>
+        <p>If you have questions about this Privacy Policy, please contact us at privacy@coursingle.com.</p>
       </div>
     </div>
   </Layout>

@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://satacepro.com/</loc>
+    <loc>https://coursingle.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/practice/math</loc>
+    <loc>https://coursingle.com/practice/math</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/practice/reading</loc>
+    <loc>https://coursingle.com/practice/reading</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/mock-test</loc>
+    <loc>https://coursingle.com/mock-test</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/sat-simulation</loc>
+    <loc>https://coursingle.com/sat-simulation</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/dashboard</loc>
+    <loc>https://coursingle.com/dashboard</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/college-insights</loc>
+    <loc>https://coursingle.com/college-insights</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/blog</loc>
+    <loc>https://coursingle.com/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/blog/top-10-sat-math-strategies</loc>
+    <loc>https://coursingle.com/blog/top-10-sat-math-strategies</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/blog/digital-sat-what-to-expect</loc>
+    <loc>https://coursingle.com/blog/digital-sat-what-to-expect</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/blog/reading-comprehension-tips</loc>
+    <loc>https://coursingle.com/blog/reading-comprehension-tips</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/blog/sat-score-goals</loc>
+    <loc>https://coursingle.com/blog/sat-score-goals</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/blog/sat-study-schedule</loc>
+    <loc>https://coursingle.com/blog/sat-study-schedule</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/about</loc>
+    <loc>https://coursingle.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/privacy</loc>
+    <loc>https://coursingle.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://satacepro.com/terms</loc>
+    <loc>https://coursingle.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

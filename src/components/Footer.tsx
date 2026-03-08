@@ -8,7 +8,7 @@ const Footer = () => (
         <div>
           <Link to="/" className="flex items-center gap-2 font-serif text-lg font-bold text-primary mb-3">
             <BookOpen className="w-5 h-5" />
-            SAT Ace Pro
+            Coursingle
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Free SAT practice with timed mock tests, topic breakdowns, and progress tracking.
@@ -39,7 +39,7 @@ const Footer = () => (
         </div>
       </div>
       <div className="mt-8 pt-6 border-t text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} SAT Ace Pro. All rights reserved.
+        © {new Date().getFullYear()} Coursingle. All rights reserved.
       </div>
     </div>
   </footer>

@@ -4,15 +4,15 @@ import SEOHead from "@/components/SEOHead";
 const About = () => (
   <Layout>
     <SEOHead
-      title="About SAT Ace Pro — Free SAT Practice Platform"
-      description="SAT Ace Pro is a free, student-focused SAT preparation platform with original questions, timed tests, and progress tracking."
+      title="About Coursingle — Free SAT Practice Platform"
+      description="Coursingle is a free, student-focused SAT preparation platform with original questions, timed tests, and progress tracking."
       canonical="/about"
     />
     <div className="container max-w-3xl py-10">
-      <h1 className="text-3xl font-bold mb-6">About SAT Ace Pro</h1>
+      <h1 className="text-3xl font-bold mb-6">About Coursingle</h1>
       <div className="space-y-4 text-muted-foreground leading-relaxed">
         <p>
-          SAT Ace Pro is a free, student-focused exam simulation platform designed to help high school students prepare for the SAT with confidence. We provide original, SAT-aligned practice questions with timed mock tests, difficulty filters, topic-based score breakdowns, and progress tracking.
+          Coursingle is a free, student-focused exam simulation platform designed to help high school students prepare for the SAT with confidence. We provide original, SAT-aligned practice questions with timed mock tests, difficulty filters, topic-based score breakdowns, and progress tracking.
         </p>
         <p>
           Our mission is to make high-quality SAT preparation accessible to every student, regardless of their financial situation. We believe that standardized test preparation shouldn't be a privilege.
