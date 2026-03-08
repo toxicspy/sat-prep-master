@@ -17,24 +17,67 @@ interface Props {
   onTimeSpent?: (questionId: number, seconds: number) => void;
 }
 
-const SimpleExplanation = ({ explanation }: { explanation: string }) => {
+const DetailedExplanation = ({ question }: { question: Question }) => {
   const [show, setShow] = useState(false);
-  const steps = explanation.split(/[.;]/).filter(s => s.trim().length > 3).map(s => s.trim() + ".");
+  const correctLetter = String.fromCharCode(65 + question.correct);
+  const correctAnswer = question.options[question.correct];
+
+  // Build meaningful steps from the explanation
+  const rawSteps = question.explanation
+    .split(/(?<=[.!?])\s+/)
+    .filter(s => s.trim().length > 5);
+
+  // Group into logical steps (2 sentences per step if many, otherwise 1 each)
+  const steps: string[] = [];
+  if (rawSteps.length <= 4) {
+    rawSteps.forEach(s => steps.push(s.trim()));
+  } else {
+    for (let i = 0; i < rawSteps.length; i += 2) {
+      const combined = rawSteps.slice(i, i + 2).join(" ").trim();
+      if (combined) steps.push(combined);
+    }
+  }
+
   return (
     <div className="mt-3">
-      <button onClick={() => setShow(!show)} className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline">
+      <button
+        onClick={() => setShow(!show)}
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition-colors px-3 py-1.5 rounded-md bg-primary/5 hover:bg-primary/10 border border-primary/20"
+      >
         <Lightbulb className="w-3.5 h-3.5" />
-        {show ? "Hide Simple Explanation" : "Explain in Simple Terms"}
+        {show ? "Hide Detailed Explanation" : "Show Step-by-Step Solution"}
       </button>
       {show && (
-        <div className="mt-2 p-3 rounded-md bg-background border text-xs space-y-1.5">
-          <p className="font-medium text-foreground mb-1">Step-by-step:</p>
-          {steps.map((step, i) => (
-            <div key={i} className="flex gap-2">
-              <span className="shrink-0 w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">{i + 1}</span>
-              <span className="text-muted-foreground">{step}</span>
+        <div className="mt-3 rounded-lg border bg-background overflow-hidden">
+          {/* Correct Answer Header */}
+          <div className="px-4 py-3 bg-success/10 border-b border-success/20 flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-success">Correct Answer</p>
+              <p className="text-sm font-medium text-foreground">{correctLetter}. {correctAnswer}</p>
             </div>
-          ))}
+          </div>
+
+          {/* Why Section */}
+          <div className="px-4 py-3 border-b">
+            <p className="text-xs font-semibold text-foreground mb-1">Why?</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">{question.explanation}</p>
+          </div>
+
+          {/* Step-by-Step */}
+          <div className="px-4 py-3">
+            <p className="text-xs font-semibold text-foreground mb-3">Step-by-Step Solution</p>
+            <div className="space-y-2.5">
+              {steps.map((step, i) => (
+                <div key={i} className="flex gap-3 items-start">
+                  <span className="shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold mt-0.5">
+                    {i + 1}
+                  </span>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{step}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>
