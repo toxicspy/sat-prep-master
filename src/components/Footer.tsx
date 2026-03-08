@@ -8,7 +8,7 @@ const Footer = () => (
         <div>
           <Link to="/" className="flex items-center gap-2 font-serif text-lg font-bold text-primary mb-3">
             <BookOpen className="w-5 h-5" />
-            SAT Ace Pro
+            Coursingle
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Free SAT practice with timed mock tests, topic breakdowns, and progress tracking.
